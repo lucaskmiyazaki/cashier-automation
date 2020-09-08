@@ -4,6 +4,9 @@ import cv2
 import numpy as np
 import json
 
+from classes.item_class import Item
+from classes.cart_class import Cart
+
 # Elastic Beanstalk looks for an 'application' that is callable by default
 app = Flask(__name__)
 
@@ -29,10 +32,11 @@ def prediction():
     frame = cv2.UMat(np.array(frame, dtype=np.uint8))
 
     # Load Yolo
-    net = cv2.dnn.readNet("yolov3_pao2.weights", "yolov3_pao2.cfg")
+    #net = cv2.dnn.readNet("yolov3_pao2.weights", "yolov3_pao2.cfg")
+    net = cv2.dnn.readNet("yolov3_custom_last.weights", "yolov3_custom.cfg")
 
     # Name custom object
-    classes = ["pao frances"]
+    classes = ["cocacola"]
 
     layer_names = net.getLayerNames()
     output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
@@ -53,6 +57,7 @@ def prediction():
     confidences = []
     boxes = []
     qtd = np.zeros(len(classes))
+    cart = Cart()
     for out in outs:
         for detection in out: # detection = [w, h, x, y, c1, c2, ...]
             scores = detection[5:]
@@ -60,6 +65,9 @@ def prediction():
             confidence = scores[class_id]
             if confidence > 0.3:
                 # Object detected
+                productName = classes[class_id]
+                item = Item(productName)
+                cart.addProduct(item)
                 qtd[class_id] += 1
                 center_x = int(detection[0] * width)
                 center_y = int(detection[1] * height)
@@ -86,9 +94,9 @@ def prediction():
             cv2.putText(img, label, (x, y + 30), font, 3, color, 2)
 
     img = cv2.UMat.get(img).tolist()
-    qtd = qtd.tolist()
-    hashtable = {"qtd": qtd, "data": img}
-    content = json.dumps(hashtable)
+    hashtable = {"cart": cart, "data": img}
+    content = json.dumps(hashtable, default=lambda o: o.__dict__)
+    print(content)
     return content
 
 
