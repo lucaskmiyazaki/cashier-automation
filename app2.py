@@ -32,11 +32,11 @@ def prediction():
     frame = cv2.UMat(np.array(frame, dtype=np.uint8))
 
     # Load Yolo
-    #net = cv2.dnn.readNet("yolov3_pao2.weights", "yolov3_pao2.cfg")
-    net = cv2.dnn.readNet("yolov3_custom_last.weights", "yolov3_custom.cfg")
+    net = cv2.dnn.readNet("cfg/yolov3_pao2.weights", "cfg/yolov3_pao2.cfg")
+    #net = cv2.dnn.readNet("yolov3_custom_last.weights", "yolov3_custom.cfg")
 
     # Name custom object
-    classes = ["cocacola"]
+    classes = ["pao"]
 
     layer_names = net.getLayerNames()
     output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
