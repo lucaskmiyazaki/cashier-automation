@@ -1,0 +1,6 @@
+ProductId,ProductName,ProductPrice
+0.0,coca-cola,4.5
+1.0,pão,0.75
+2.0,maçã,1.0
+3.0,pera,1.25
+4.0,pepsi,4.75
