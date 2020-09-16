@@ -6,7 +6,9 @@ Functions responsible for database interaction
 """
 
 import pandas as pd
-import classes.product_class
+import imp
+product_class = imp.load_source("classes", "../classes/product_class.py")
+
 
 # Receive String productName
 # Return Product searchProduct, if there is a product with productName as its name
@@ -18,7 +20,7 @@ def getProductPerName(productName):
         if (productName == searchName):
             searchID = dataBase["ProductId"][i]
             searchPrice = dataBase["ProductPrice"][i]
-            searchProduct = classes.product_class.Product(searchID, searchName, searchPrice)
+            searchProduct = product_class.Product(searchID, searchName, searchPrice)
             return searchProduct
     # Product name not found
     return (-1) 
@@ -31,7 +33,7 @@ def getAllProducts():
         currID = dataBase["ProductId"][i]
         currName = dataBase["ProductName"][i]
         currPrice = dataBase["ProductPrice"][i]
-        currProduct = classes.product_class.Product(currID, currName, currPrice)
+        currProduct = product_class.Product(currID, currName, currPrice)
         productsList.append(currProduct)
     
     return productsList
@@ -79,11 +81,40 @@ def deleteProduct(product):
     
     newDB.to_csv('./products.csv', index = False)
             
+# Return int product new ID
+def getNewProductID():
+    productList = getAllProducts()
+    newID = len(productList)
+    return newID
+
+# Receive String productName
+# If productName exists in database: return productID
+# Else: return -1
+def getProductID(productName):
+    product = getProductPerName(productName)
+    if (product == -1):
+        return -1
+    else:
+        productID = product.getID()
+        return productID
+
+# Return array<String> allProductsNames
+def getAllProductsNames():
+    listProducts = getAllProducts()
+    listNames = []
+    for i in range (len(listProducts)):
+        currProduct = listProducts[i]
+        currName = currProduct.getName()
+        listNames.append(currName)
+    return listNames
 
 def main():
-    print(getProductPerName('cocacola'))
-    setProductPrice('pepsi', 4.75)
-    print(getProductPerName('pepsi'))
+    print(getProductPerName('coke'))
+    setProductPrice('coke', 4.75)
+    print(getProductPerName('coke'))
+    print(getAllProductsNames())
+    print(getNewProductID())
     addProduct("guaraná", 4.00)
+    print(getProductID('guaraná'))
     deleteProduct(getProductPerName('guaraná'))
 main()

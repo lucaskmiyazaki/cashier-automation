@@ -7,7 +7,11 @@ from zipfile import ZipFile
 import io
 import os
 import re
+import imp
 from dateparser import parse
+
+product_db = imp.load_source("database", "../database/product_db.py")
+product_utils = imp.load_source("utils", "../utils/product_names_utils.py")
 
 def seg(product, class_number, used_dates, zf, sample_number):
     datatype = "ref"
@@ -103,9 +107,10 @@ def seg(product, class_number, used_dates, zf, sample_number):
                 os.remove("%s%d-%d.txt" %(path+class_name, sample_number, number))
     return date
 
-classes = "coke\nbread\napple\nbanana\npepsi\ncoxinha\neclair\ncheese_bread\nchoux_cream\nmate"
+productNames = product_db.getAllProductsNames()
+classes = product_utils.getProductNamesString(productNames)
 class_name = "apple"
-class_number = 2
+class_number = product_db.getProductID(class_name)
 path = "../temp/"
 used_dates = []
 n_folders = 2
