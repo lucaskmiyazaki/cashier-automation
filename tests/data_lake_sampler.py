@@ -104,8 +104,8 @@ def seg(product, class_number, used_dates, zf, sample_number):
     return date
 
 classes = "coke\nbread\napple\nbanana\npepsi\ncoxinha\neclair\ncheese_bread\nchoux_cream\nmate"
-class_name = "apple"
-class_number = 2
+class_name = "choux_cream"
+class_number = 8
 path = "../temp/"
 used_dates = []
 n_folders = 2

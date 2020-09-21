@@ -113,7 +113,10 @@ def prediction():
     #net = cv2.dnn.readNet("yolov3_custom_last.weights", "yolov3_custom.cfg")
 
     # Name custom object
-    classes = ["pão_francês"]
+    products = db.getAllProducts()
+    classes = []
+    for product in products:
+        classes.append(product.getName())
 
     layer_names = net.getLayerNames()
     output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
