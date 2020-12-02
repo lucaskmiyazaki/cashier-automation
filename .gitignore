@@ -7,3 +7,6 @@
 temp/*
 cfg/*
 dataLake/*
+
+database/__pycache__/*
+*.swp
